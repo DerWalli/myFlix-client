@@ -47,3 +47,4 @@ export const MainView = () => {
     </div>
   );
 };
+ 

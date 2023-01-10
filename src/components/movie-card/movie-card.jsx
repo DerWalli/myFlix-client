@@ -22,4 +22,4 @@ MovieCard.propTypes = {
 //    director: PropTypes.string
   }).isRequired,
   onBookClick: PropTypes.func.isRequired
-};
+}; 
