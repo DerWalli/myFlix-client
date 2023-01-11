@@ -18,7 +18,7 @@ export const MainView = () => {
             author: doc.director_name?.[0]
           };
         });
- 
+
         setMovies(moviesFromApi);
       });
   }, []);
@@ -47,3 +47,4 @@ export const MainView = () => {
     </div>
   );
 };
+ 
