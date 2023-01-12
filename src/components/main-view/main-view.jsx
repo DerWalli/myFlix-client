@@ -15,15 +15,15 @@ export const MainView = () => {
 
 
   useEffect(() => {
-    if (!token) /*{ */
+    if (!token) 
       return;
-    /*}*/
+    
 
     fetch("https://myflix-api-3dxz.onrender.com/movies", {
-      headers: { Authorization: 'Bearer ${token}' }
+      headers: { Authorization: 'Bearer ${token}' },
     })
       .then((response) => response.json())
-      -then((movies) => {
+      .then((movies) => {
         setMovies(movies);
 
       });
@@ -87,7 +87,7 @@ export const MainView = () => {
       >
         Logout
       </button>
-      {movies.map((book) => (
+      {movies.map((movie) => (
         <MovieCard
           key={movie.id}
           movie={movie}
