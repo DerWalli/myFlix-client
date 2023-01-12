@@ -27143,17 +27143,17 @@ const MainView = ()=>{
     _s();
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const storedToken = localStorage.getItem("token");
-    const [user, setUser] = (0, _react.useState)(storedUser ? storedUser : null);
-    const [token, setToken] = (0, _react.useState)(storedToken ? storedToken : null);
+    const [user, setUser] = (0, _react.useState)(null);
     const [movies, setMovies] = (0, _react.useState)([]);
     const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
+    const [token, setToken] = (0, _react.useState)(null);
     (0, _react.useEffect)(()=>{
-        if (!token) return;
-        fetch("https://myflix-api-3dxz.onrender.com/movies", {
+        if (!token) /*{ */ return;
+        /*}*/ fetch("https://myflix-api-3dxz.onrender.com/movies", {
             headers: {
                 Authorization: "Bearer ${token}"
             }
-        }).then((response)=>response.json()).then((movies)=>{
+        }).then((response)=>response.json()), then((movies)=>{
             setMovies(movies);
         });
     }, [
@@ -27240,7 +27240,7 @@ const MainView = ()=>{
                 lineNumber: 83,
                 columnNumber: 7
             }, undefined),
-            movies.map((movie)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieCard.MovieCard), {
+            movies.map((book)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieCard.MovieCard), {
                     movie: movie,
                     onMovieClick: (newSelectedMovie)=>{
                         setSelectedMovie(newSelectedMovie);
@@ -27281,7 +27281,7 @@ const MainView = ()=>{
   );
 };
 */ 
-_s(MainView, "skShail9kO25ilQX788tJ78Yq3c=");
+_s(MainView, "3vh6lwJzyFAPbGbuPWMvLKVz7JA=");
 _c = MainView;
 var _c;
 $RefreshReg$(_c, "MainView");
@@ -27291,7 +27291,7 @@ $RefreshReg$(_c, "MainView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react":"21dqq","../movie-card/movie-card":"bwuIu","../movie-view/movie-view":"ggaUx","@parcel/transformer-js/src/esmodule-helpers.js":"5FlL3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"9LFSQ","../login-view/login-view":"9YtA0","../signup-view/signup-view":"4OGiN","react/jsx-dev-runtime":"iTorj"}],"bwuIu":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","../movie-card/movie-card":"bwuIu","../movie-view/movie-view":"ggaUx","@parcel/transformer-js/src/esmodule-helpers.js":"5FlL3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"9LFSQ","../login-view/login-view":"9YtA0","../signup-view/signup-view":"4OGiN"}],"bwuIu":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$67b2 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -27323,7 +27323,7 @@ MovieCard.propTypes = {
     movie: (0, _propTypesDefault.default).shape({
         title: (0, _propTypesDefault.default).string.isRequired
     }).isRequired,
-    onMovieClick: (0, _propTypesDefault.default).func.isRequired
+    onBookClick: (0, _propTypesDefault.default).func.isRequired
 };
 var _c;
 $RefreshReg$(_c, "MovieCard");
@@ -28496,7 +28496,7 @@ const SignupView = ()=>{
                         value: username,
                         onChange: (e)=>setUsername(e.target.value),
                         required: true,
-                        minLength: "1"
+                        minLength: "3"
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
                         lineNumber: 40,
