@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-export const LoginView = () => {
+export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
  
@@ -25,9 +25,10 @@ export const LoginView = () => {
       .then((data) => {
         console.log("Login response: ", data);
         if (data.user) {
-          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("user", JSON.stringify(data.user.Username));
           localStorage.setItem("token", data.token);
-          onLoggedIn(data.user, data.token);
+          setUsername(data.user.Username)
+          onLoggedIn(username, data.token);
         } else {
           alert("No such user");
         }

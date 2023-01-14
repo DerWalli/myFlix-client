@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
@@ -6,8 +7,8 @@ import { SignupView } from "../signup-view/signup-view";
 
 
 export const MainView = () => {
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const storedToken = localStorage.getItem("token");
+ // const storedUser = JSON.parse(localStorage.getItem("user"));
+ // const storedToken = localStorage.getItem("token");
   const [user, setUser] = useState(null);
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -15,36 +16,38 @@ export const MainView = () => {
 
 
   useEffect(() => {
-    if (!token) 
+    if (!token) {
       return;
-    
-
-    fetch("https://myflix-api-3dxz.onrender.com/movies", {
-      headers: { Authorization: 'Bearer ${token}' },
-    })
+    }
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
+    if (user && token) {
+      setUser(JSON.parse(storedUser));
+      setToken(storedToken);
+      fetch("https://myflix-api-3dxz.onrender.com/movies", {
+      headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => response.json())
       .then((movies) => {
         setMovies(movies);
 
       });
-      }, [token]);
+    }
+  }, [token]);
     
- 
-  if (!user) {
-    return (
-      <>
-
-      <LoginView onLoggedIn={(user, token) => {
-          setUser(user);
-          setToken(token);
-        }}
-      />
-      or
-      <SignupView />
-      </>
-    );
+  if (user && token) {
+    return <div>{movies.map((movie) => movie.Title)}</div>;
+  } else {
+    return <>
+    <LoginView onLoggeIn={(user, token) => {
+      setUser(user);
+      setToken(token);
+    }}/>
+    <SignupView />
+    </>;
   }
-
+}
+/*  
   if (selectedMovie) {
     return (
       <>
@@ -62,7 +65,7 @@ export const MainView = () => {
       </>
     );
   }
-
+/*
   if (movies.length === 0) {
     return (
       <>
@@ -97,8 +100,8 @@ export const MainView = () => {
         />
       ))}
     </div>
-  );
-};
+  );*/
+  
 
 /*  if (selectedMovie) {
     return (
