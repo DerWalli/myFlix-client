@@ -1,53 +1,51 @@
-import React from "react";
-import { useEffect, useState } from "react";
-import { MovieCard } from "../movie-card/movie-card";
+import React, { useEffect, useState } from "react";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
+import { MovieCard } from "../movie-card/movie-card";
 import { SignupView } from "../signup-view/signup-view";
 
 
 export const MainView = () => {
- // const storedUser = JSON.parse(localStorage.getItem("user"));
- // const storedToken = localStorage.getItem("token");
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(localStorage.getItem('user'));
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const storedUser = localStorage.getItem('user');
+  const storedToken = localStorage.getItem('token');
+
+
+
 
 
   useEffect(() => {
     if (!token) {
+      console.log("No token")
       return;
     }
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
+
     if (user && token) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
+      console.log(user ,token)
       fetch("https://myflix-api-3dxz.onrender.com/movies", {
       headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => response.json())
       .then((movies) => {
         setMovies(movies);
-
+        
       });
     }
-  }, [token]);
-    
-  if (user && token) {
-    return <div>{movies.map((movie) => movie.Title)}</div>;
-  } else {
-    return <>
-    <LoginView onLoggeIn={(user, token) => {
-      setUser(user);
-      setToken(token);
-    }}/>
-    <SignupView />
-    </>;
+  }, []);
+
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+    console.log("State selectedMovie", selectedMovie)
   }
-}
-/*  
+
+  const onLoggedIn = (user, token) => {
+    setUser(user);
+    setToken(token);
+  }
+
   if (selectedMovie) {
     return (
       <>
@@ -65,7 +63,28 @@ export const MainView = () => {
       </>
     );
   }
+    
+  if (user && token) {
+    if (movies.length === 0) {
+      
+      return <div> The list is empty! </div>;
+    }
+    return <div>
+      <button onClick={() => {setUser(null); setToken(null); localStorage.clear();}}>
+        Logout
+      </button>
+  {movies.map((movie) => <MovieCard movie={movie} onMovieClick={handleMovieClick}></MovieCard>)}</div>;
+  } 
+  else {
+    return <>
+    <LoginView onLoggedIn={onLoggedIn}/>
+    <SignupView />
+    </>;
+  }
+}
+
 /*
+
   if (movies.length === 0) {
     return (
       <>
@@ -100,7 +119,7 @@ export const MainView = () => {
         />
       ))}
     </div>
-  );*/
+  );
   
 
 /*  if (selectedMovie) {
@@ -108,10 +127,6 @@ export const MainView = () => {
       <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
     );
  }
-
-  if (movies.length === 0) {
-    return <div> The list is empty! </div>;
-  }
 
   return (
     <div>
