@@ -18,7 +18,8 @@ export const ProfileView = ({ movies }) => {
           user.Favorites && user.Favorites.includes(m._id) >= 0
         );
 
-    const updateUser = (username) => {
+
+    const updateUser = (user) => {
         fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -38,17 +39,17 @@ export const ProfileView = ({ movies }) => {
           Email: email,
         };
     
-        fetch("https://myflix-api-3dxz.onrender.com/users"+user, {
+        fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
           method: "PUT",
           body: JSON.stringify(data),
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          },
-        }).then((response) => {
+            "Content-Type": "application/json"},
+        })
+        .then((response) => {
           if (response.ok) {
             alert("Changes saved");
-            updateUser(user.Username).then(() => window.location.reload());
+            updateUser(user).then(() => window.location.reload());
           } else {
             alert("Something went wrong");
           }
@@ -57,7 +58,7 @@ export const ProfileView = ({ movies }) => {
     
       const handleDeregister = () => {
     
-        fetch("https://myflix-api-3dxz.onrender.com/users"+user, {
+        fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -74,7 +75,7 @@ export const ProfileView = ({ movies }) => {
       };
     
       return (
-        console.log("log: ", user),
+        console.log("log: ", user.email),
         <Row>
           <Col>
             <div className="profile-info">
@@ -84,11 +85,11 @@ export const ProfileView = ({ movies }) => {
               </div>
               <div className="user-info">
                 <span className="label">Email: </span>
-                <span className="value">{user.Email}</span>
+                <span className="value">{user.email}</span>
               </div>
               <div className="user-info">
                 <span className="label">Birthday: </span>
-                <span className="value">{user.Birthday}</span>
+                <span className="value">{user.birthday}</span>
               </div>
             </div>
           </Col>
@@ -125,6 +126,7 @@ export const ProfileView = ({ movies }) => {
           </Col>
           <Row>
             <h1>Favs: </h1>
+
 
             {  favoriteMovies.length === 0 ? (
                   <Col>The list is empty!</Col>
