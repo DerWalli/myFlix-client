@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { MovieCard } from "../movie-card/movie-card";
 import { SignupView } from "../signup-view/signup-view";
+import { ProfileView } from "../profile-view/profile-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 
 
 
@@ -77,7 +82,7 @@ export const MainView = () => {
             }
           />
           <Route
-            path="/movies/:MovieId"
+            path="/movies/:movieId"
             element={
               <>
                 {!user ? (
@@ -112,6 +117,22 @@ export const MainView = () => {
               </>
             }
           />
+          <Route
+          path="/profile"
+          element={
+            <>
+              {!user ? (
+                <Navigate to="/login" replace />
+              ) : user.length === 0 ? (
+                <Col>No such user found!</Col>
+              ) : (
+                <Col>
+                  <ProfileView user={user} movies={movies} />
+                </Col>
+              )}
+            </>
+          }
+        />
         </Routes>
       </Row>
     </BrowserRouter>
