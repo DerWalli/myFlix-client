@@ -7,6 +7,8 @@ import Form from "react-bootstrap/Form";
 export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [favorites, setFavorites] = useState("");
  
   const handleSubmit = (event) => {
     
@@ -28,9 +30,13 @@ export const LoginView = ({ onLoggedIn }) => {
       .then((data) => {
         console.log("Login response: ", data);
         if (data.user) {
+          localStorage.setItem("favorites", JSON.stringify(data.user.Favorites));
           localStorage.setItem("user", JSON.stringify(data.user.Username));
           localStorage.setItem("token", data.token);
-          setUsername(data.user.Username)
+          console.log("data.user.Favorites: ", data.user.Favorites);
+          setFavorites(data.user.Favorites);
+          console.log("favs:", favorites);
+          setUsername(data.user.Username);
           onLoggedIn(username, data.token);
         } else {
           alert("No such user");

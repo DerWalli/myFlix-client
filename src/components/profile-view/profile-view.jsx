@@ -8,17 +8,22 @@ export const ProfileView = ({ movies }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [birthday, setBirthday] = useState('');
+    const [favorites, setFavorites] = useState('');
+    
 
     const storedUser = localStorage.getItem("user");
     const [user, setUser] = useState(storedUser ? storedUser : null);
+    const storedFav = localStorage.getItem("favorites");
 
 
-    let favoriteMovies = movies.filter((m) =>
-        console.log("x"),
-          user.Favorites && user.Favorites.includes(m._id) >= 0
-        );
+    let favoriteMovies = movies.filter((m) => {
+        console.log("m.id :", m.id);
+        console.log(storedFav.includes(m.id));
+          storedFav && storedFav.includes(m.id) >= 0
+    });
 
-
+   
     const updateUser = (user) => {
         fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
           headers: { Authorization: `Bearer ${token}` },
@@ -46,14 +51,18 @@ export const ProfileView = ({ movies }) => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"},
         })
-        .then((response) => {
-          if (response.ok) {
+          .then((response) => {
+            if (response.ok) {
+            setUser(data.user); 
+            localStorage.setItem("user", JSON.stringify(data.user)); 
             alert("Changes saved");
-            updateUser(user).then(() => window.location.reload());
+            updateUser(user);
+            console.log(data.user)
+            window.location.reload();
           } else {
             alert("Something went wrong");
           }
-        });
+          });
       };
     
       const handleDeregister = () => {
@@ -67,7 +76,8 @@ export const ProfileView = ({ movies }) => {
         }).then((response) => {
           if (response.ok) {
             alert("Account successfully deleted");
-            window.location.reload();
+            localStorage.clear();
+            window.location.reload();            
           } else {
             alert("Something went wrong");
           }
@@ -100,6 +110,7 @@ export const ProfileView = ({ movies }) => {
                 <Form.Label>Username: </Form.Label>
                 <Form.Control
                 type="username" 
+                placeholder={user}
                 value={username} 
                 onChange={e => setUsername(e.target.value)} 
                 />
@@ -108,6 +119,7 @@ export const ProfileView = ({ movies }) => {
                 <Form.Label>Password: </Form.Label>
                 <Form.Control 
                 type="password" 
+                placeholder="password"
                 value={password} 
                 onChange={e => setPassword(e.target.value)} 
                 />
@@ -116,6 +128,7 @@ export const ProfileView = ({ movies }) => {
                 <Form.Label>Email: </Form.Label>
                 <Form.Control 
                 type="text" 
+                placeholder={email}
                 value={email} 
                 onChange={e => setEmail(e.target.value)} 
                 />
@@ -128,11 +141,13 @@ export const ProfileView = ({ movies }) => {
             <h1>Favs: </h1>
 
 
-            {  favoriteMovies.length === 0 ? (
-                  <Col>The list is empty!</Col>
+            {  favoriteMovies.length > 0 ? (
+              console.log("favMov: ",favoriteMovies),
+                  <Col>No Favorite Movies Yet!</Col>
                 ) : (
                   <>
                     {favoriteMovies.map((movie) => (
+                      console.log("favMov: ",favoriteMovies),
                       <Col className="mb-4" key={movie.id} md={3}>
                         <MovieCard movie={movie} />
                       </Col>

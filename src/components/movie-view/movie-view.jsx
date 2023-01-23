@@ -26,6 +26,8 @@ export const MovieView = ({ movies }) => {
       }
     }).then((response) => {
       console.log(movie.id+"  add");
+      storedFavorites = 2/*JSON.parse(localStorage.getItem(data.user.Favorites))*/;
+      console.log("favs: ",storedFavorites);
       if (response.ok) {
         alert("Added to favorites!");
         } else {
