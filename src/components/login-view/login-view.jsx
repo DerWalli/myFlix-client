@@ -30,12 +30,15 @@ export const LoginView = ({ onLoggedIn }) => {
       .then((data) => {
         console.log("Login response: ", data);
         if (data.user) {
-          localStorage.setItem("favorites", JSON.stringify(data.user.Favorites));
-          localStorage.setItem("user", JSON.stringify(data.user.Username));
           localStorage.setItem("token", data.token);
-          console.log("data.user.Favorites: ", data.user.Favorites);
+          let favorites = localStorage.setItem("favorites", JSON.stringify(data.user.Favorites));
+          let user = localStorage.setItem("user", JSON.stringify(data.user.Username));
+          let userData = localStorage.setItem("userData", JSON.stringify(data.user));
+          let Email = localStorage.setItem("email", JSON.stringify(data.user.Email));
+          let Birthday = localStorage.setItem("birthday",JSON.stringify(data.user.Birthday));
+
+          console.log("data.user: ", data.user);
           setFavorites(data.user.Favorites);
-          console.log("favs:", favorites);
           setUsername(data.user.Username);
           onLoggedIn(username, data.token);
         } else {

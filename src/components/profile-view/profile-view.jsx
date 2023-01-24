@@ -12,16 +12,17 @@ export const ProfileView = ({ movies }) => {
     const [favorites, setFavorites] = useState('');
     
 
-    const storedUser = localStorage.getItem("user");
+    let storedUser = localStorage.getItem("user");
     const [user, setUser] = useState(storedUser ? storedUser : null);
-    const storedFav = localStorage.getItem("favorites");
+    let storedFav = localStorage.getItem("favorites");
+    console.log(storedFav," <- storedFav");
 
 
     let favoriteMovies = movies.filter((m) => {
-        console.log("m.id :", m.id);
-        console.log(storedFav.includes(m.id));
-          storedFav && storedFav.includes(m.id) >= 0
-    });
+        console.log("movie: ", m.id,"-", m.title);
+        console.log("favorite ?: ", storedFav.includes(m.id));
+          storedFav && storedFav.includes(m.id);
+     });
 
    
     const updateUser = (user) => {
@@ -85,21 +86,21 @@ export const ProfileView = ({ movies }) => {
       };
     
       return (
-        console.log("log: ", user.email),
+        console.log("log: ", storedFav),
         <Row>
           <Col>
             <div className="profile-info">
               <div className="user-info">
                 <span className="label">Username: </span>
-                <span className="value">{user}</span>
+                <span className="value">{localStorage.getItem("user")}</span>
               </div>
               <div className="user-info">
                 <span className="label">Email: </span>
-                <span className="value">{user.email}</span>
+                <span className="value">{localStorage.getItem("email")}</span>
               </div>
               <div className="user-info">
                 <span className="label">Birthday: </span>
-                <span className="value">{user.birthday}</span>
+                <span className="value">{localStorage.getItem("birthday")}</span>
               </div>
             </div>
           </Col>
@@ -128,7 +129,7 @@ export const ProfileView = ({ movies }) => {
                 <Form.Label>Email: </Form.Label>
                 <Form.Control 
                 type="text" 
-                placeholder={email}
+                placeholder={localStorage.getItem("email")}
                 value={email} 
                 onChange={e => setEmail(e.target.value)} 
                 />
@@ -142,12 +143,12 @@ export const ProfileView = ({ movies }) => {
 
 
             {  favoriteMovies.length > 0 ? (
-              console.log("favMov: ",favoriteMovies),
+              console.log("favMov-: ",storedFav),
                   <Col>No Favorite Movies Yet!</Col>
                 ) : (
                   <>
                     {favoriteMovies.map((movie) => (
-                      console.log("favMov: ",favoriteMovies),
+                      console.log("favMov+: ",favoriteMovies),
                       <Col className="mb-4" key={movie.id} md={3}>
                         <MovieCard movie={movie} />
                       </Col>
