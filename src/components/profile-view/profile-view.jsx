@@ -1,28 +1,56 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Row, Col, } from "react-bootstrap";
+import { Button, Container, Form, Row, Col, } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
+import { FavoriteMovies } from "./favorite-movies";
 
-export const ProfileView = ({ movies }) => {
+
+export const ProfileView = ({ user, movies }) => {
     const storedToken = localStorage.getItem("token");
+    const storedMovies = localStorage.getItem("movies");
+    const [allMovies] = useState(storedMovies ? storedMovies: movies);
     const [token] = useState(storedToken ? storedToken : null);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [birthday, setBirthday] = useState('');
-    const [favorites, setFavorites] = useState('');
-    
+    //const [birthday, setBirthday] = useState('');
+   // const [favorites, setFavorites] = useState('');
+    const storedFav = localStorage.getItem("favorites");
+    const storedUser = localStorage.getItem("user");
+    // const [user, setUser] = useState(storedUser ? storedUser : null);
+   // const {Username, Birthday, Email, Favorites} = user;    
+   // const [userFavoriteMovies] = useState(storedUser.Favorites ? storedUser.Favorites: Favorites);
+    const [filteredMovies, setFilteredMovies] = useState(allMovies);
+    //const [selectedId, setSelectedId] = useState("");
+    console.log(user, storedFav);
+    console.log("filteredMovies: ", filteredMovies)
+    let hasMovieId = localStorage.getItem("favorites");
 
-    let storedUser = localStorage.getItem("user");
-    const [user, setUser] = useState(storedUser ? storedUser : null);
-    let storedFav = localStorage.getItem("favorites");
-    console.log(storedFav," <- storedFav");
 
 
-    let favoriteMovies = movies.filter((m) => {
-        console.log("movie: ", m.id,"-", m.title);
-        console.log("favorite ?: ", storedFav.includes(m.id));
-          storedFav && storedFav.includes(m.id);
-     });
+
+     const favoriteMovieList = movies.filter((m) => {
+           return storedFav.includes(m.id);
+           /*storedFav.includes(m.id);*/
+
+
+           console.log("movie: ", m.id,"-", m.title);
+           console.log("favorite ?: ", storedFav.includes(m.id), storedFav.indexOf(m.id));
+    });
+   
+
+
+    /*<div id="car-list">
+    {filteredMovies.map((item, index) => (
+       <div className="car-item" key={index}>
+         <div className="car-name">{`Name: ${item.name}`}</div>
+         <div className="car-year">{`Year: ${item.release_year}`}</div>
+         <img className="car-image" src={item.url} alt="car-img" />
+       </div>
+       ))}
+       </div>*/
+     
+   // console.log("favoriteMovies", favoriteMovies);
+
 
    
     const updateUser = (user) => {
@@ -33,18 +61,19 @@ export const ProfileView = ({ movies }) => {
           .then((data) => {
             setUser(data.user);
             localStorage.setItem("user", JSON.stringify(data.user));
+          //  console.log("User->", user)
           });
     };
-    
+   
       const handleSubmit = (event) => {
         event.preventDefault();  
-    
+   
         const data = {
           Username: username,
           Password: password,
           Email: email,
         };
-    
+   
         fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
           method: "PUT",
           body: JSON.stringify(data),
@@ -52,10 +81,27 @@ export const ProfileView = ({ movies }) => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"},
         })
+       /* .then((response) => response.json())
+          .then((data) => {
+           
+            localStorage.setItem("user", JSON.stringify(data.user));
+          if (response.ok) {
+            setUser(data.user);
+            alert("Changes saved");
+            console.log("before update: ", data.user);
+            updateUser(user);
+            console.log("after update: ", data.user);
+          } else {
+            alert("Something went wrong");
+          }
+         });
+       };*/
+
+
           .then((response) => {
             if (response.ok) {
-            setUser(data.user); 
-            localStorage.setItem("user", JSON.stringify(data.user)); 
+            setUser(data.user);
+            localStorage.setItem("user", JSON.stringify(data.user));
             alert("Changes saved");
             updateUser(user);
             console.log(data.user)
@@ -65,9 +111,9 @@ export const ProfileView = ({ movies }) => {
           }
           });
       };
-    
+   
       const handleDeregister = () => {
-    
+   
         fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
           method: "DELETE",
           headers: {
@@ -84,9 +130,10 @@ export const ProfileView = ({ movies }) => {
           }
         });
       };
-    
+   
       return (
-        console.log("log: ", storedFav),
+       // console.log("log at Bottom: ", storedFav),
+      <Container>
         <Row>
           <Col>
             <div className="profile-info">
@@ -110,45 +157,47 @@ export const ProfileView = ({ movies }) => {
               <Form.Group>
                 <Form.Label>Username: </Form.Label>
                 <Form.Control
-                type="username" 
+                type="username"
                 placeholder={user}
-                value={username} 
-                onChange={e => setUsername(e.target.value)} 
+                value={username}
+                onChange={e => setUsername(e.target.value)}
                 />
               </Form.Group>
               <Form.Group>
                 <Form.Label>Password: </Form.Label>
-                <Form.Control 
-                type="password" 
+                <Form.Control
+                type="password"
                 placeholder="password"
-                value={password} 
-                onChange={e => setPassword(e.target.value)} 
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 />
               </Form.Group>
               <Form.Group>
                 <Form.Label>Email: </Form.Label>
-                <Form.Control 
-                type="text" 
+                <Form.Control
+                type="text"
                 placeholder={localStorage.getItem("email")}
-                value={email} 
-                onChange={e => setEmail(e.target.value)} 
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 />
               </Form.Group>
               <Button type="submit" className="button-primary">Save Changes</Button>
             </Form>
             <Button onClick={() => handleDeregister(user._id)} className="button-delete" type="submit" variant="danger" >Delete Account</Button>
           </Col>
+          </Row>
           <Row>
             <h1>Favs: </h1>
-
-
-            {  favoriteMovies.length > 0 ? (
-              console.log("favMov-: ",storedFav),
+            {  favoriteMovieList.length <= 0 ? (
+              console.log("array-length ", favoriteMovieList.length),
+              console.log("array-lenght2 ",hasMovieId.length),
+              //console.log("hasMovieId: ", hasMovieId),
                   <Col>No Favorite Movies Yet!</Col>
                 ) : (
                   <>
-                    {favoriteMovies.map((movie) => (
-                      console.log("favMov+: ",favoriteMovies),
+                    {favoriteMovieList.map((movie) => (
+                      console.log("favMov+: ",favoriteMovieList),
+                      console.log("hasMovieId: ", hasMovieId),
                       <Col className="mb-4" key={movie.id} md={3}>
                         <MovieCard movie={movie} />
                       </Col>
@@ -156,8 +205,9 @@ export const ProfileView = ({ movies }) => {
                   </>
                 )}
           </Row>
-        </Row>
+      </Container>
       );
     };
-          
-          
+         
+         
+

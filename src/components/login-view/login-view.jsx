@@ -16,7 +16,9 @@ export const LoginView = ({ onLoggedIn }) => {
   
     const data = {
       Username: username,
-      Password: password
+      Password: password,
+      Birthday: birthday,
+      Favorites: favorites,
     };
  
     fetch("https://myflix-api-3dxz.onrender.com/login", {
@@ -38,6 +40,7 @@ export const LoginView = ({ onLoggedIn }) => {
           let Birthday = localStorage.setItem("birthday",JSON.stringify(data.user.Birthday));
 
           console.log("data.user: ", data.user);
+          console.log("user.favorites: ", data.user.Favorites);
           setFavorites(data.user.Favorites);
           setUsername(data.user.Username);
           onLoggedIn(username, data.token);

@@ -12,11 +12,11 @@ export const MovieView = ({ movies }) => {
 
   const storedToken = localStorage.getItem("token");
   const storedUser = JSON.parse(localStorage.getItem("user"));
+  const storedFavorites = JSON.parse(localStorage.getItem("favorites"));
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [user, setUser] = useState(storedUser ? storedUser : null);
 
   const handleFavorite = () => {
-
 
     fetch("https://myflix-api-3dxz.onrender.com/users/"+user+"/"+movie.id, {
       method: "POST",
@@ -26,8 +26,8 @@ export const MovieView = ({ movies }) => {
       }
     }).then((response) => {
       console.log(movie.id+"  add");
-      storedFavorites = 2/*JSON.parse(localStorage.getItem(data.user.Favorites))*/;
-      console.log("favs: ",storedFavorites);
+      /*const storedFavorites = localStorage.setItem(movie, user);*/
+      console.log("storedFavorites: ",storedFavorites);
       if (response.ok) {
         alert("Added to favorites!");
         } else {
