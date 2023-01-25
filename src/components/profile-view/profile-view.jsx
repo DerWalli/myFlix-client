@@ -22,19 +22,20 @@ export const ProfileView = ({ user, movies }) => {
     const [filteredMovies, setFilteredMovies] = useState(allMovies);
     //const [selectedId, setSelectedId] = useState("");
     console.log(user, storedFav);
-    console.log("filteredMovies: ", filteredMovies)
+  //  console.log("filteredMovies: ", filteredMovies)
     let hasMovieId = localStorage.getItem("favorites");
 
 
 
 
      const favoriteMovieList = movies.filter((m) => {
+              /* console.log("movie: ", m.id,"-", m.title);
+              console.log("favorite ?: ", storedFav.includes(m.id), storedFav.indexOf(m.id)); */
            return storedFav.includes(m.id);
            /*storedFav.includes(m.id);*/
 
 
-           console.log("movie: ", m.id,"-", m.title);
-           console.log("favorite ?: ", storedFav.includes(m.id), storedFav.indexOf(m.id));
+          
     });
    
 
