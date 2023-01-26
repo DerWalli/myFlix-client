@@ -34,7 +34,7 @@ export const ProfileView = ({/* user,*/ movies }) => {
     let hasMovieId = localStorage.getItem("favorites");
 
 
-
+    
 
      const favoriteMovieList = movies.filter((m) => {
               /* console.log("movie: ", m.id,"-", m.title);
@@ -42,7 +42,8 @@ export const ProfileView = ({/* user,*/ movies }) => {
            return storedFav.includes(m.id);
            /*storedFav.includes(m.id);*/
 
-    });
+    })
+  
 
    
     const updateUser = (user) => {
@@ -56,7 +57,11 @@ export const ProfileView = ({/* user,*/ movies }) => {
           //  console.log("User->", user)
           });
     };
-   
+
+    /* useEffect(()=> {
+      updateUser(token);
+    },[])  */
+
       const handleSubmit = (event) => {
         event.preventDefault();  
    
