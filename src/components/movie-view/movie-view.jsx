@@ -28,8 +28,14 @@ export const MovieView = ({ movies }) => {
       console.log(movie.id+"  add");
       /*const storedFavorites = localStorage.setItem(movie, user);*/
       console.log("storedFavorites: ",storedFavorites);
-      if (response.ok) {
+     if (response.ok) {
         alert("Added to favorites!");
+        const favorites = JSON.parse(localStorage.getItem("favorites"));
+        if (!favorites) {
+          favorites = [];
+        }
+        favorites.push(movie.id)
+        localStorage.setItem("favorites", JSON.stringify(favorites));
         } else {
         alert("Something went wrong");
       }
