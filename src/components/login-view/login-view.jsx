@@ -9,6 +9,7 @@ export const LoginView = ({ onLoggedIn }) => {
   const [password, setPassword] = useState("");
   const [birthday, setBirthday] = useState("");
   const [favorites, setFavorites] = useState("");
+  const [id, setId] = useState("");
  
   const handleSubmit = (event) => {
     
@@ -38,11 +39,14 @@ export const LoginView = ({ onLoggedIn }) => {
           let userData = localStorage.setItem("userData", JSON.stringify(data.user));
           let Email = localStorage.setItem("email", JSON.stringify(data.user.Email));
           let Birthday = localStorage.setItem("birthday",JSON.stringify(data.user.Birthday));
+          let Id = localStorage.setItem("UId", JSON.stringify(data.user._id));
 
           console.log("data.user: ", data.user);
           console.log("user.favorites: ", data.user.Favorites);
+          console.log("user.id: ", data.user._id)
           setFavorites(data.user.Favorites);
           setUsername(data.user.Username);
+          setId(data.user._id);
           onLoggedIn(username, data.token);
         } else {
           alert("No such user");

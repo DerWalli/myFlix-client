@@ -17,6 +17,8 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 
 export const MainView = () => {
   const [user, setUser] = useState(localStorage.getItem('user'));
+  let userData = localStorage.getItem("userData");
+  console.log("mainview-userdata: ", userData);
   const [movies, setMovies] = useState([]);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const storedUser = localStorage.getItem('user');
@@ -37,7 +39,7 @@ export const MainView = () => {
           const obj = { id: movie._id, title: movie.Title, description: movie.Description, image: movie.ImageURL, genre: movie.Genre, director: movie.Director}
           return obj;
         });
-        console.log("movies from api:", data);
+       //console.log("movies from api:", data);
         setMovies(moviesFromApi);
         localStorage.setItem("movies", JSON.stringify(moviesFromApi))
       });

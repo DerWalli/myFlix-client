@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Form, Row, Col, } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
-import { FavoriteMovies } from "./favorite-movies";
+import { UpdateView } from "./update-view";
 
 
-export const ProfileView = ({ user, movies }) => {
+export const ProfileView = ({/* user,*/ movies }) => {
     const storedToken = localStorage.getItem("token");
     const storedMovies = localStorage.getItem("movies");
+    const storedId = localStorage.getItem("UId");
+    const storedUser = localStorage.getItem("user");
+    let cleanId = storedId.replace(/"/g,'');
+    console.log("1", storedId, cleanId);
+    let cleanUser = storedUser.replace(/"/g,'');
+    console.log("2", storedUser, cleanUser);
+    
+    
     const [allMovies] = useState(storedMovies ? storedMovies: movies);
     const [token] = useState(storedToken ? storedToken : null);
     const [username, setUsername] = useState('');
@@ -15,14 +23,14 @@ export const ProfileView = ({ user, movies }) => {
     //const [birthday, setBirthday] = useState('');
    // const [favorites, setFavorites] = useState('');
     const storedFav = localStorage.getItem("favorites");
-    const storedUser = localStorage.getItem("user");
-    // const [user, setUser] = useState(storedUser ? storedUser : null);
+    const [user, setUser] = useState(storedUser ? storedUser : null);
+    console.log("3", user);
    // const {Username, Birthday, Email, Favorites} = user;    
    // const [userFavoriteMovies] = useState(storedUser.Favorites ? storedUser.Favorites: Favorites);
     const [filteredMovies, setFilteredMovies] = useState(allMovies);
     //const [selectedId, setSelectedId] = useState("");
-    console.log(user, storedFav);
-  //  console.log("filteredMovies: ", filteredMovies)
+    //console.log(user, storedFav);
+    //console.log("filteredMovies: ", filteredMovies)
     let hasMovieId = localStorage.getItem("favorites");
 
 
@@ -34,28 +42,11 @@ export const ProfileView = ({ user, movies }) => {
            return storedFav.includes(m.id);
            /*storedFav.includes(m.id);*/
 
-
-          
     });
-   
-
-
-    /*<div id="car-list">
-    {filteredMovies.map((item, index) => (
-       <div className="car-item" key={index}>
-         <div className="car-name">{`Name: ${item.name}`}</div>
-         <div className="car-year">{`Year: ${item.release_year}`}</div>
-         <img className="car-image" src={item.url} alt="car-img" />
-       </div>
-       ))}
-       </div>*/
-     
-   // console.log("favoriteMovies", favoriteMovies);
-
 
    
     const updateUser = (user) => {
-        fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
+        fetch("https://myflix-api-3dxz.onrender.com/users/"+cleanUser, {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then((response) => response.json())
@@ -75,29 +66,14 @@ export const ProfileView = ({ user, movies }) => {
           Email: email,
         };
    
-        fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
+        fetch("https://myflix-api-3dxz.onrender.com/users/"+cleanUser, {
           method: "PUT",
           body: JSON.stringify(data),
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"},
         })
-       /* .then((response) => response.json())
-          .then((data) => {
-           
-            localStorage.setItem("user", JSON.stringify(data.user));
-          if (response.ok) {
-            setUser(data.user);
-            alert("Changes saved");
-            console.log("before update: ", data.user);
-            updateUser(user);
-            console.log("after update: ", data.user);
-          } else {
-            alert("Something went wrong");
-          }
-         });
-       };*/
-
+     
 
           .then((response) => {
             if (response.ok) {
@@ -105,17 +81,18 @@ export const ProfileView = ({ user, movies }) => {
             localStorage.setItem("user", JSON.stringify(data.user));
             alert("Changes saved");
             updateUser(user);
-            console.log(data.user)
+            localStorage.clear();
             window.location.reload();
           } else {
             alert("Something went wrong");
+            console.log(username, password, email);
           }
           });
       };
    
       const handleDeregister = () => {
    
-        fetch("https://myflix-api-3dxz.onrender.com/users/"+user, {
+        fetch("https://myflix-api-3dxz.onrender.com/users/"+cleanId, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -128,6 +105,7 @@ export const ProfileView = ({ user, movies }) => {
             window.location.reload();            
           } else {
             alert("Something went wrong");
+            
           }
         });
       };
@@ -184,7 +162,7 @@ export const ProfileView = ({ user, movies }) => {
               </Form.Group>
               <Button type="submit" className="button-primary">Save Changes</Button>
             </Form>
-            <Button onClick={() => handleDeregister(user._id)} className="button-delete" type="submit" variant="danger" >Delete Account</Button>
+            <Button onClick={() => handleDeregister(/*user._id*/)} className="button-delete" type="submit" variant="danger" >Delete Account</Button>
           </Col>
           </Row>
           <Row>
@@ -209,6 +187,3 @@ export const ProfileView = ({ user, movies }) => {
       </Container>
       );
     };
-         
-         
-
