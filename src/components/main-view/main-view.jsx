@@ -16,7 +16,7 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 
 
 export const MainView = () => {
-  const [user, setUser] = useState(localStorage.getItem('user'));
+  const [user, setUser] = useState(null);
   let userData = localStorage.getItem("userData");
   console.log("mainview-userdata: ", userData);
   const [movies, setMovies] = useState([]);
@@ -26,11 +26,13 @@ export const MainView = () => {
 
 
   useEffect(() => {
+    console.log("UserEffect")
     if (!token) {
     console.log("No token")
     return;
     }
 
+    getUser();
     fetch("https://myflix-api-3dxz.onrender.com/movies", {
       headers: { Authorization: `Bearer ${token}` }
     }).then((response) => response.json())
@@ -45,6 +47,18 @@ export const MainView = () => {
       });
   }, [token]);
 
+  const getUser = () => {
+    console.log("About to call user api")
+    const userName = localStorage.getItem("username");
+    fetch(`https://myflix-api-3dxz.onrender.com/users/${userName}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then((response) => response.json())
+      .then((data) => {
+        setUser(data.user);
+      });
+  }
+
+  console.log("user0001", user)
 
   return (
     <BrowserRouter>
@@ -130,7 +144,7 @@ export const MainView = () => {
                 <Col>No such user found!</Col>
               ) : (
                 <Col>
-                  <ProfileView /*user={user}*/ movies={movies} />
+                  <ProfileView userObj={user} movies={movies} />
                 </Col>
               )}
             </>

@@ -41,13 +41,15 @@ export const LoginView = ({ onLoggedIn }) => {
           let Birthday = localStorage.setItem("birthday",JSON.stringify(data.user.Birthday));
           let Id = localStorage.setItem("UId", JSON.stringify(data.user._id));
 
+          localStorage.setItem("username", data.user.Username);
+
           console.log("data.user: ", data.user);
           console.log("user.favorites: ", data.user.Favorites);
           console.log("user.id: ", data.user._id)
           setFavorites(data.user.Favorites);
           setUsername(data.user.Username);
           setId(data.user._id);
-          onLoggedIn(username, data.token);
+          onLoggedIn(data.user, data.token);
         } else {
           alert("No such user");
         }

@@ -4,7 +4,8 @@ import { MovieCard } from "../movie-card/movie-card";
 import { UpdateView } from "./update-view";
 
 
-export const ProfileView = ({/* user,*/ movies }) => {
+export const ProfileView = ({ userObj, movies }) => {
+    console.log("User", userObj)
     const storedToken = localStorage.getItem("token");
     const storedMovies = localStorage.getItem("movies");
     const storedId = localStorage.getItem("UId");
@@ -54,13 +55,10 @@ export const ProfileView = ({/* user,*/ movies }) => {
           .then((data) => {
             setUser(data.user);
             localStorage.setItem("user", JSON.stringify(data.user));
-          //  console.log("User->", user)
           });
     };
 
-    /* useEffect(()=> {
-      updateUser(token);
-    },[])  */
+    
 
       const handleSubmit = (event) => {
         event.preventDefault();  
