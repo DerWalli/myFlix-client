@@ -7,7 +7,6 @@ import './movie-card.scss';
 
 
 export const MovieCard = ({ movie }) => {
-  console.log("MovieCard", movie.title)
     return ( 
       <Card className="movieCard mt-3 mb-3">
       <Card.Img variant="top" src={movie.image} />

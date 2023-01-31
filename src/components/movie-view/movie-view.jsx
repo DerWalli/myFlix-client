@@ -1,60 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { Button, Card, Row, Container, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./movie-view.scss";
 
-export const MovieView = ({ movies }) => {
- console.log(1)
+export const MovieView = ({ user, movies }) => { // Martin: pass user object as well to read favmovies
   const { movieId } = useParams();
-
   const movie = movies.find((b) => b.id === movieId);
-
   const storedToken = localStorage.getItem("token");
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const storedFavorites = JSON.parse(localStorage.getItem("favorites"));
-  const [token, setToken] = useState(storedToken ? storedToken : null);
-  const [user, setUser] = useState(storedUser ? storedUser : null);
+  const [fav, setFav] = useState(false);
 
-  const handleFavorite = () => {
+  useEffect(() => {
+    // Martin: Get fav from user props and look for movieId in the user.Favorites list
+    setFav(user.Favorites.includes(movieId))
+  }, [])
 
-    fetch("https://myflix-api-3dxz.onrender.com/users/"+user+"/"+movie.id, {
+  const handleAddFavorite = () => {
+    fetch("https://myflix-api-3dxz.onrender.com/users/"+user.Username+"/"+movie.id, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${storedToken}`,
         "Content-Type": "application/json"
       }
     }).then((response) => {
-      console.log(movie.id+"  add");
-      /*const storedFavorites = localStorage.setItem(movie, user);*/
-      console.log("storedFavorites: ",storedFavorites);
      if (response.ok) {
         alert("Added to favorites!");
-        const favorites = JSON.parse(localStorage.getItem("favorites"));
-        if (!favorites) {
-          favorites = [];
-        }
-        favorites.push(movie.id)
-        localStorage.setItem("favorites", JSON.stringify(favorites));
-        } else {
+        // Martin: We need to set and maintain a state for favorite button to toggle the add/remove buttons
+        setFav(true);
+      } else {
         alert("Something went wrong");
       }
     });
   };
 
   const handleRemoveFavorite = () => {
-
-
-    fetch("https://myflix-api-3dxz.onrender.com/users/"+user+"/"+movie.id, {
+    fetch("https://myflix-api-3dxz.onrender.com/users/"+user.Username+"/"+movie.id, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${storedToken}`,
         "Content-Type": "application/json"
       }
     }).then((response) => {
-      console.log(movie.id+"  remove");
       if (response.ok) {
         alert("Removed from favorites");
+        setFav(false)
       } else {
         alert("Something went wrong");
       }
@@ -62,7 +51,6 @@ export const MovieView = ({ movies }) => {
   };
 
     return (
-      console.log(movie.image),
       <Row className="movie-view">
         <Col md={6} className="movie-poster"  >
           <img className="movie-img" crossOrigin="anonymous" src={movie.image} />
@@ -80,20 +68,21 @@ export const MovieView = ({ movies }) => {
           </Link>
           <br></br>
           <br></br>
-            <Button 
+          {/* Martin: We toggle fav button here */}
+          {
+            !fav ? <Button 
             className="button-add-favorite"
-            onClick={() => handleFavorite(movie._id, "add")}
+            onClick={() => handleAddFavorite()}
             >
               + Add to Favorites
-            </Button>
-            <br></br>
-            <br></br>
-            <Button 
+            </Button> : <Button 
             variant="danger"
-            onClick={() => handleRemoveFavorite(movie._id, "add")}
+            onClick={() => handleRemoveFavorite()}
             >
               Remove from Favorites
-            </Button> 
+            </Button>
+          }
+            
         </Col>
       </Row>
     );

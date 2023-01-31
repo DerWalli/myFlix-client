@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Form, Row, Col, } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
-import { UpdateView } from "./update-view";
 
 
-export const ProfileView = ({ userObj, movies }) => {
-    console.log("User", userObj)
+export const ProfileView = ({ user, movies }) => {
+    // Martin: Lot of cleanup needed, I think we can do it together, this part!
     const storedToken = localStorage.getItem("token");
     const storedMovies = localStorage.getItem("movies");
     const storedId = localStorage.getItem("UId");
     const storedUser = localStorage.getItem("user");
-    let cleanId = storedId.replace(/"/g,'');
-    console.log("1", storedId, cleanId);
-    let cleanUser = storedUser.replace(/"/g,'');
-    console.log("2", storedUser, cleanUser);
     
     
     const [allMovies] = useState(storedMovies ? storedMovies: movies);
@@ -21,25 +16,15 @@ export const ProfileView = ({ userObj, movies }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    //const [birthday, setBirthday] = useState('');
-   // const [favorites, setFavorites] = useState('');
     const storedFav = localStorage.getItem("favorites");
-    const [user, setUser] = useState(storedUser ? storedUser : null);
-    console.log("3", user);
-   // const {Username, Birthday, Email, Favorites} = user;    
-   // const [userFavoriteMovies] = useState(storedUser.Favorites ? storedUser.Favorites: Favorites);
+    //const [user, setUser] = useState(storedUser ? storedUser : null);
     const [filteredMovies, setFilteredMovies] = useState(allMovies);
-    //const [selectedId, setSelectedId] = useState("");
-    //console.log(user, storedFav);
-    //console.log("filteredMovies: ", filteredMovies)
     let hasMovieId = localStorage.getItem("favorites");
 
 
     
 
      const favoriteMovieList = movies.filter((m) => {
-              /* console.log("movie: ", m.id,"-", m.title);
-              console.log("favorite ?: ", storedFav.includes(m.id), storedFav.indexOf(m.id)); */
            return storedFav.includes(m.id);
            /*storedFav.includes(m.id);*/
 
@@ -76,8 +61,6 @@ export const ProfileView = ({ userObj, movies }) => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"},
         })
-     
-
           .then((response) => {
             if (response.ok) {
             setUser(data.user);
@@ -88,13 +71,11 @@ export const ProfileView = ({ userObj, movies }) => {
             window.location.reload();
           } else {
             alert("Something went wrong");
-            console.log(username, password, email);
           }
           });
       };
    
       const handleDeregister = () => {
-   
         fetch("https://myflix-api-3dxz.onrender.com/users/"+cleanId, {
           method: "DELETE",
           headers: {
@@ -108,13 +89,11 @@ export const ProfileView = ({ userObj, movies }) => {
             window.location.reload();            
           } else {
             alert("Something went wrong");
-            
           }
         });
       };
    
       return (
-       // console.log("log at Bottom: ", storedFav),
       <Container>
         <Row>
           <Col>
@@ -171,15 +150,10 @@ export const ProfileView = ({ userObj, movies }) => {
           <Row>
             <h1>Favs: </h1>
             {  favoriteMovieList.length <= 0 ? (
-              console.log("array-length ", favoriteMovieList.length),
-              console.log("array-lenght2 ",hasMovieId.length),
-              //console.log("hasMovieId: ", hasMovieId),
                   <Col>No Favorite Movies Yet!</Col>
                 ) : (
                   <>
                     {favoriteMovieList.map((movie) => (
-                      console.log("favMov+: ",favoriteMovieList),
-                      console.log("hasMovieId: ", hasMovieId),
                       <Col className="mb-4" key={movie.id} md={3}>
                         <MovieCard movie={movie} />
                       </Col>
