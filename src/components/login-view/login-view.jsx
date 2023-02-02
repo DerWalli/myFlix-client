@@ -1,25 +1,18 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-//import React from "react";
 
 
 export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [favorites, setFavorites] = useState("");
-  const [id, setId] = useState("");
  
   const handleSubmit = (event) => {
-    
     event.preventDefault(); 
   
     const data = {
       Username: username,
       Password: password,
-      Birthday: birthday,
-      Favorites: favorites,
     };
  
     fetch("https://myflix-api-3dxz.onrender.com/login", {
@@ -29,36 +22,19 @@ export const LoginView = ({ onLoggedIn }) => {
       },
       body: JSON.stringify(data)
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Login response: ", data);
-        if (data.user) {
-          localStorage.setItem("token", data.token);
-          let favorites = localStorage.setItem("favorites", JSON.stringify(data.user.Favorites));
-          let user = localStorage.setItem("user", JSON.stringify(data.user.Username));
-          let userData = localStorage.setItem("userData", JSON.stringify(data.user));
-          let Email = localStorage.setItem("email", JSON.stringify(data.user.Email));
-          let Birthday = localStorage.setItem("birthday",JSON.stringify(data.user.Birthday));
-          let Id = localStorage.setItem("UId", JSON.stringify(data.user._id));
-
-          localStorage.setItem("username", data.user.Username);
-
-          console.log("data.user: ", data.user);
-          console.log("user.favorites: ", data.user.Favorites);
-          console.log("user.id: ", data.user._id)
-          setFavorites(data.user.Favorites);
-          setUsername(data.user.Username);
-          setId(data.user._id);
-          onLoggedIn(data.user, data.token);
-        } else {
-          alert("No such user");
-        }
-      })
-      .catch((e) => {
-        console.log(e)
-        alert("Something went wrong");
-      });
-    }
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.user) {
+        onLoggedIn(data.user, data.token);
+      } else {
+        alert("No such user");
+      }
+    })
+    .catch((e) => {
+      console.error("Error while trying to login", e);
+      alert("Something went wrong");
+    });
+  }
   
   return (
     <Form onSubmit={handleSubmit}>
