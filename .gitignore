@@ -1,7 +1,5 @@
 node_modules
 node_modules/
-dist/
-dist
 .cache
 .parcel-cache
 dist/index.b4b6dfad.js
